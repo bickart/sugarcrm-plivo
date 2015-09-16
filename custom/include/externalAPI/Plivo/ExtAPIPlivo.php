@@ -37,11 +37,11 @@ class ExtAPIPlivo extends ExternalAPIBase
     {
         try {
             $usNumberProto = $this->phoneUtil->parse($dst, "US");
-            if ($this->phoneUtil->isValidNumber($usNumberProto)) {
-                //echo $this->phoneUtil->format($usNumberProto, \libphonenumber\PhoneNumberFormat::E164);
+            $srcNumberProto = $this->phoneUtil->parse($this->srcPhone, "US");
 
+            if ($this->phoneUtil->isValidNumber($usNumberProto) && $this->phoneUtil->isValidNumber($srcNumberProto)) {
                 return $this->service->message()->send(
-                    $this->srcPhone,
+                    $this->phoneUtil->format($srcNumberProto, \libphonenumber\PhoneNumberFormat::E164),
                     $this->phoneUtil->format($usNumberProto, \libphonenumber\PhoneNumberFormat::E164),
                     $message
                 );
@@ -49,12 +49,14 @@ class ExtAPIPlivo extends ExternalAPIBase
 
             throw new \Bickart\Plivo\Exceptions\PlivoException("Invalid Destination Phone Number");
         } catch (\libphonenumber\NumberParseException $e) {
-            var_dump($e);
+            _ppl($e);
+            throw $e;
         }
 
     }
 
-    function getMessageDetail($id) {
+    function getMessageDetail($id)
+    {
         $GLOBALS['log']->fatal($id);
         return $this->service->message()->getById($id);
     }
