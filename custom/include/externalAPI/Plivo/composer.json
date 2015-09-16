@@ -1,0 +1,7 @@
+{
+   "require": {
+        "php": ">=5.4.0",
+        "bickart/plivo-php": "dev-master",
+        "giggsey/libphonenumber-for-php": "~7.0"
+    }
+}
